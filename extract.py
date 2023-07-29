@@ -8,8 +8,10 @@ import pyarrow as pa
 
 dotenv.load_dotenv(dotenv.find_dotenv())
 
-def extract_weater_data(api_key):
+def extract_weather_data():
     # intervalo de datas
+    api_key = os.getenv('api_key')
+
     data_inicio = datetime.today()
     data_fim = data_inicio + timedelta(days=7)
 
@@ -24,9 +26,8 @@ def extract_weater_data(api_key):
             f"{city}/{data_inicio}/{data_fim}?unitGroup=metric&include=days&key={key}&contentType=csv")
 
     dados = pd.read_csv(URL)
-    dados.to_parquet(path='/home/jesus/Documentos/repos/airflow/dados/weather_condition.parquet', engine='pyarrow')
+    dados.to_parquet(path=f'/home/jesus/Documentos/repos/airflow/dados/weather_condition={data_inicio}.parquet', engine='pyarrow')
     return None
 
 if __name__ == '__main__':
-    api_key = os.getenv('api_key')
-    dados = extract_weater_data(api_key)
+    dados = extract_weather_data()
